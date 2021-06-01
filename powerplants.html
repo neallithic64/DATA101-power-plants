@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="wrunner-default-theme.css">
 	<!-- wRunner JS -->
 	<script src="wrunner-native.js"></script>
+	<script src="jquery-3.5.1.min.js"></script>
 
 	<style>
 		.title { width: 100%; }
@@ -63,7 +64,7 @@
 					<h4>Year</h4>
 					
 					<div class="my-js-slider"></div>
-					<div class="flex" style="justify-content: space-between;">
+					<div class="flex" style="justify-content: space-between; margin-top: -10px;">
 						<div style="font-size: 13px; align-items: flex-start;">1961</div>
 						<div style="font-size: 13px; align-items: flex-end;">2010</div>
 					</div>
@@ -78,7 +79,7 @@
 					<h4>Capacity</h4>
 
 					<div class="my-js-slider2"></div>
-					<div class="flex" style="justify-content: space-between;">
+					<div class="flex" style="justify-content: space-between; margin-top: -10px;">
 						<div style="font-size: 13px; align-items: flex-start;">1</div>
 						<div style="font-size: 13px; align-items: flex-end;">22k</div>
 					</div>
@@ -131,19 +132,25 @@
 
 		// https://www.codehim.com/text-input/html-range-slider-with-2-handles-javascript/
 		
-		var setting = {
-			roots: document.querySelector('.my-js-slider'),
-			type: 'range',
-			step: 1,
-			}
-		var slider = wRunner(setting);
+		$(document).ready(function(){
+			$('.my-js-slider').wRunner({
+				type: 'range',
+				rangeValue: {
+					minValue: 1966,
+					maxValue: 2010,
+						},
+				step: 1,
+			})
+			$('.my-js-slider2').wRunner({
+				type: 'range',
+				rangeValue: {
+					minValue: 1,
+					maxValue: 22000,
+						},
+				step: 1,
+			})
+		})
 
-		var setting = {
-			roots: document.querySelector('.my-js-slider2'),
-			type: 'range',
-			step: 1,
-			}
-		var slider = wRunner(setting);
 	</script>
 
 </body>
