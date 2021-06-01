@@ -3,45 +3,22 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<script src="https://d3js.org/d3.c6.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	
+	<link rel="stylesheet" href="assets/styles.css">
+	<script src="assets/scripts.js"></script>
+	
 	<title>Global Temperatures and Power Plant Locations Visualizations</title>
-	
-	<!-- wRunner CSS -->
-	<link rel="stylesheet" href="wrunner-default-theme.css">
-	<!-- wRunner JS -->
-	<script src="wrunner-native.js"></script>
-	
-	<style>
-		.title { width: 100%; }
-		h1 { text-align: center; }
-		h3, h4 { margin: 1.5px; }
-		h4 { color:darkslategrey; }
-
-		.content {
-			width: 100%;
-			height: 100%;
-			display: flex;
-		}
-		.filters {
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: space-between;
-			padding-left: 1rem;
-			padding-right: 1rem;
-			border-right: 2px solid black;
-			border-color: black;
-			width: 18%;
-		}
-		.flex {
-			display: flex;
-		}
-
-	</style>
 </head>
 
 <body>
-	<div class="title"><h1> Global Temperatures and Power Plant Locations Visualizations </h1></div>
+	<div class="title">
+		<h1> Global Temperatures and Power Plant Locations Visualizations </h1>
+	</div>
+	
 	<hr>
 
 	<div class="content">
@@ -63,8 +40,8 @@
 				<div style="padding: 0 10px; margin: 5px 0 10px">
 					<h4>Year</h4>
 					
-					<div class="my-js-slider"></div>
-					<div class="flex" style="justify-content: space-between; margin-top: -10px;">
+					<div id="year-slider"></div>
+					<div class="flex" style="justify-content: space-between;">
 						<div style="font-size: 13px; align-items: flex-start;">1961</div>
 						<div style="font-size: 13px; align-items: flex-end;">2010</div>
 					</div>
@@ -78,8 +55,8 @@
 				<div style="padding: 0 10px; margin: 5px 0 10px">
 					<h4>Capacity</h4>
 
-					<div class="my-js-slider2"></div>
-					<div class="flex" style="justify-content: space-between; margin-top: -10px;">
+					<div id="capa-slider"></div>
+					<div class="flex" style="justify-content: space-between;">
 						<div style="font-size: 13px; align-items: flex-start;">1</div>
 						<div style="font-size: 13px; align-items: flex-end;">22k</div>
 					</div>
@@ -127,31 +104,5 @@
 
 		</div>
 	</div>
-	
-	<script>
-
-		// https://www.codehim.com/text-input/html-range-slider-with-2-handles-javascript/
-		
-		$(document).ready(function(){
-			$('.my-js-slider').wRunner({
-				type: 'range',
-				rangeValue: {
-					minValue: 1966,
-					maxValue: 2010,
-						},
-				step: 1,
-			})
-			$('.my-js-slider2').wRunner({
-				type: 'range',
-				rangeValue: {
-					minValue: 1,
-					maxValue: 22000,
-						},
-				step: 1,
-			})
-		})
-
-	</script>
-
 </body>
 </html>
