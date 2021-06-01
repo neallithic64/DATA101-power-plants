@@ -4,9 +4,138 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>Global Temperatures and Power Plant Locations Visualizations</title>
+
+	<style>
+		.title { width: 100%; }
+		h1 { text-align: center; }
+		h3, h4 { margin: 1.5px; }
+		h4 { color:darkslategrey; }
+
+		.content {
+			width: 100%;
+			height: 100%;
+			background-color: gray;
+			display: flex;
+		}
+		.filters {
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			padding-left: 1rem;
+			padding-right: 1rem;
+			background-color: beige;
+			border-right: 10px;
+			border-color: black;
+			width: 18%;
+		}
+		.flex {
+			display: flex;
+		}
+
+	</style>
 </head>
 
 <body>
+	<div class="title"><h1> Global Temperatures and Power Plant Locations Visualizations </h1></div>
+	<hr>
+
+	<div class="content">
+		<div class="filters">
+			<h2>Dashboard Filters</h2>
+			<div style="padding: 0 5px; margin: 10px 0 20px">
+				<h3>Area</h3>
+					<input type="checkbox" id="africa" name="africa" value="africa"><label for="africa"> Africa</label><br>
+					<input type="checkbox" id="antarctica" name="antarctica" value="antarctica"><label for="antarctica"> Antarctica</label><br>
+					<input type="checkbox" id="asia" name="asia" value="asia"><label for="asia"> Asia</label><br>
+					<input type="checkbox" id="australia" name="australia" value="australia"><label for="australia"> Australia</label><br>
+					<input type="checkbox" id="europe" name="europe" value="europe"><label for="europe"> Europe</label><br>
+					<input type="checkbox" id="north" name="north" value="north"><label for="north"> North America</label><br>
+					<input type="checkbox" id="south" name="south" value="south"><label for="south"> South America</label><br>
+			</div>
+
+			<div style="padding: 0 5px; margin: 10px 0 20px">
+				<h3>Time Period</h3>
+				<div style="padding: 0 10px; margin: 5px 0 10px">
+					<h4>Year</h4>
+					<input type="range" min="1960" max="2010" value="2000" class="slider" id="myRange">
+				</div>
+				
+			</div>
+
+			<div style="padding: 0 5px; margin: 10px 0 20px">
+				<h3>Emissions</h3>
+				<div style="padding: 0 10px; margin: 5px 0 10px">
+					<h4>Capacity</h4>
+
+					<input type="range" list="tickmarks">
+					<datalist id="tickmarks">
+						<option value="0" label="0%"></option>
+						<option value="10"></option>
+						<option value="20"></option>
+						<option value="30"></option>
+						<option value="40"></option>
+						<option value="50" label="50%"></option>
+						<option value="60"></option>
+						<option value="70"></option>
+						<option value="80"></option>
+						<option value="90"></option>
+						<option value="100" label="100%"></option>
+					</datalist>
+
+				</div>
+				<div style="padding: 0 10px; margin: 5px 0 10px">
+					<h4>Fuel</h4>
+					<div class="flex">
+						<div style="padding: 0 10px 0 5px;">
+							<input type="checkbox" id="coal" name="coal" value="coal"><label for="coal"> Coal</label><br>
+							<input type="checkbox" id="gas" name="gas" value="gas"><label for="gas"> Gas</label><br>
+							<input type="checkbox" id="hydro" name="hydro" value="hydro"><label for="hydro"> Hydro</label><br>
+							<input type="checkbox" id="nuclear" name="nuclear" value="nuclear"><label for="nuclear"> Nuclear</label><br>
+							<input type="checkbox" id="others" name="others" value="others"><label for="others"> Others</label><br>
+						</div>
+						<div style="padding: 0 5px 0 10px;">
+							<input type="checkbox" id="oil" name="oil" value="oil"><label for="oil"> Oil</label><br>
+							<input type="checkbox" id="solar" name="solar" value="solar"><label for="solar"> Solar</label><br>
+							<input type="checkbox" id="waste" name="waste" value="waste"><label for="waste"> Waste</label><br>
+							<input type="checkbox" id="wind" name="wind" value="wind"><label for="wind"> Wind</label><br>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="graphs" style="width: 82%;">
+			<div style="width: 100%; height: 350px; background-color: gray;">
+				<h2 style="text-align: center;"> Temperature and Power Plant Map </h2>
+
+			</div>
+
+			<div class="flex" style="width: 100%; height: 300px">
+				<div style="width: 65%; background-color: red;">
+					<h2 style="text-align: center;">Yearly Power Plant Count and Temperature Change</h2>
+
+				</div>
+
+				<div style="width: 35%; background-color: blue;">
+					<h2 style="text-align: center;">Fuel Type Distribution</h2>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
 	
+	<script>
+		var slider = document.getElementById("myRange");
+		var output = document.getElementById("demo");
+		output.innerHTML = slider.value; // Display the default slider value
+
+		// Update the current slider value (each time you drag the slider handle)
+		slider.oninput = function() {
+			output.innerHTML = this.value;
+		}
+	</script>
+
 </body>
 </html>
