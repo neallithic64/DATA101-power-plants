@@ -6,6 +6,11 @@
 	<script src="https://d3js.org/d3.c6.min.js"></script>
 	<title>Global Temperatures and Power Plant Locations Visualizations</title>
 
+	<!-- wRunner CSS -->
+	<link rel="stylesheet" href="wrunner-default-theme.css">
+	<!-- wRunner JS -->
+	<script src="wrunner-native.js"></script>
+
 	<style>
 		.title { width: 100%; }
 		h1 { text-align: center; }
@@ -30,12 +35,12 @@
 		.flex {
 			display: flex;
 		}
+
 	</style>
 </head>
 
 <body>
 	<div class="title"><h1> Global Temperatures and Power Plant Locations Visualizations </h1></div>
-	
 	<hr>
 
 	<div class="content">
@@ -56,7 +61,13 @@
 				<h3>Time Period</h3>
 				<div style="padding: 0 10px; margin: 5px 0 10px">
 					<h4>Year</h4>
-					<input type="range" min="1960" max="2010" value="2000" class="slider" id="myRange">
+					
+					<div class="my-js-slider"></div>
+					<div class="flex" style="justify-content: space-between;">
+						<div style="font-size: 13px; align-items: flex-start;">1961</div>
+						<div style="font-size: 13px; align-items: flex-end;">2010</div>
+					</div>
+
 				</div>
 				
 			</div>
@@ -66,20 +77,11 @@
 				<div style="padding: 0 10px; margin: 5px 0 10px">
 					<h4>Capacity</h4>
 
-					<input type="range" list="tickmarks">
-					<datalist id="tickmarks">
-						<option value="0" label="0%"></option>
-						<option value="10"></option>
-						<option value="20"></option>
-						<option value="30"></option>
-						<option value="40"></option>
-						<option value="50" label="50%"></option>
-						<option value="60"></option>
-						<option value="70"></option>
-						<option value="80"></option>
-						<option value="90"></option>
-						<option value="100" label="100%"></option>
-					</datalist>
+					<div class="my-js-slider2"></div>
+					<div class="flex" style="justify-content: space-between;">
+						<div style="font-size: 13px; align-items: flex-start;">1</div>
+						<div style="font-size: 13px; align-items: flex-end;">22k</div>
+					</div>
 
 				</div>
 				<div style="padding: 0 10px; margin: 5px 0 10px">
@@ -126,14 +128,22 @@
 	</div>
 	
 	<script>
-		var slider = document.getElementById("myRange");
-		var output = document.getElementById("demo");
-		output.innerHTML = slider.value; // Display the default slider value
 
-		// Update the current slider value (each time you drag the slider handle)
-		slider.oninput = function() {
-			output.innerHTML = this.value;
-		}
+		// https://www.codehim.com/text-input/html-range-slider-with-2-handles-javascript/
+		
+		var setting = {
+			roots: document.querySelector('.my-js-slider'),
+			type: 'range',
+			step: 1,
+			}
+		var slider = wRunner(setting);
+
+		var setting = {
+			roots: document.querySelector('.my-js-slider2'),
+			type: 'range',
+			step: 1,
+			}
+		var slider = wRunner(setting);
 	</script>
 
 </body>
