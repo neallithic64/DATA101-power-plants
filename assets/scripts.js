@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(async function() {
 	$("#year-slider").slider({
 		range: true,
 		min: 1961,
@@ -45,5 +45,13 @@ $(document).ready(function() {
 		}
 		console.log(fuels);
 	});
-
+	
+	await getBothSets();
 });
+
+async function getBothSets() {
+	let data1 = await d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv");
+	let data2 = await d3.csv("global_power_plant_database.csv");
+	
+	console.log(data1);
+}
