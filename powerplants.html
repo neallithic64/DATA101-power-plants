@@ -9,6 +9,9 @@
 	<script src="https://d3js.org/d3.v3.min.js"></script>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+	
 	<link rel="stylesheet" href="assets/styles.css">
 	<script src="assets/scripts.js"></script>
 	<title>Global Temperatures and Power Plant Locations Visualizations</title>
@@ -26,19 +29,19 @@
 			<h2>Dashboard Filters</h2>
 			<div style="padding: 0 5px; margin: 10px 0 20px">
 				<h3>Area</h3>
-					<input type="checkbox" class="area" id="africa" name="africa" value="africa" checked><label for="africa"> Africa</label><br>
-					<input type="checkbox" class="area" id="antarctica" name="antarctica" value="antarctica" checked><label for="antarctica"> Antarctica</label><br>
-					<input type="checkbox" class="area" id="asia" name="asia" value="asia" checked><label for="asia"> Asia</label><br>
-					<input type="checkbox" class="area" id="australia" name="australia" value="australia" checked><label for="australia"> Australia</label><br>
-					<input type="checkbox" class="area" id="europe" name="europe" value="europe" checked><label for="europe"> Europe</label><br>
-					<input type="checkbox" class="area" id="north" name="north" value="north" checked><label for="north"> North America</label><br>
-					<input type="checkbox" class="area" id="south" name="south" value="south" checked><label for="south"> South America</label><br>
+					<input type="checkbox" class="area" id="africa" name="africa" value="africa"><label for="africa"> Africa</label><br>
+					<input type="checkbox" class="area" id="antarctica" name="antarctica" value="antarctica"><label for="antarctica"> Antarctica</label><br>
+					<input type="checkbox" class="area" id="asia" name="asia" value="asia"><label for="asia"> Asia</label><br>
+					<input type="checkbox" class="area" id="australia" name="australia" value="australia"><label for="australia"> Australia</label><br>
+					<input type="checkbox" class="area" id="europe" name="europe" value="europe"><label for="europe"> Europe</label><br>
+					<input type="checkbox" class="area" id="north" name="north" value="north"><label for="north"> North America</label><br>
+					<input type="checkbox" class="area" id="south" name="south" value="south"><label for="south"> South America</label><br>
 			</div>
 
 			<div style="padding: 0 5px; margin: 10px 0 20px">
 				<h3>Time Period</h3>
 				<div style="padding: 0 10px; margin: 5px 0 10px">
-					<div class="flex"> <h4>Year</h4> &nbsp; <p>(</p> <p id="years">1961 - 2018</p> <p>)</p> </div>
+					<div class="flex"> <h4>Year</h4> &nbsp; <p>(</p> <p id="years">1961,2018</p> <p>)</p> </div>
 					
 					<div id="year-slider"></div>
 					<div class="flex" style="justify-content: space-between;">
@@ -53,7 +56,7 @@
 			<div style="padding: 0 5px; margin: 10px 0 20px">
 				<h3>Emissions</h3>
 				<div style="padding: 0 10px; margin: 5px 0 10px">
-					<div class="flex"> <h4>Capacity</h4> &nbsp; <p>(</p> <p id="capacities">1 - 22500</p> <p>)</p> </div>
+					<div class="flex"> <h4>Capacity</h4> &nbsp; <p>(</p> <p id="capacities">1,22500</p> <p>)</p> </div>
 
 					<div id="capa-slider" style="margin-left: 10px;"></div>
 					<div class="flex" style="justify-content: space-between;">
@@ -66,17 +69,17 @@
 					<h4>Fuel</h4>
 					<div class="flex">
 						<div style="padding: 0 10px 0 5px;">
-							<input type="checkbox" class="fuel" id="coal" name="coal" value="coal" checked><label for="coal"> Coal</label><br>
-							<input type="checkbox" class="fuel" id="gas" name="gas" value="gas" checked><label for="gas"> Gas</label><br>
-							<input type="checkbox" class="fuel" id="hydro" name="hydro" value="hydro" checked><label for="hydro"> Hydro</label><br>
-							<input type="checkbox" class="fuel" id="nuclear" name="nuclear" value="nuclear" checked><label for="nuclear"> Nuclear</label><br>
-							<input type="checkbox" class="fuel" id="others" name="others" value="others" checked><label for="others"> Others</label><br>
+							<input type="checkbox" class="fuel" id="coal" name="coal" value="coal"><label for="coal"> Coal</label><br>
+							<input type="checkbox" class="fuel" id="gas" name="gas" value="gas"><label for="gas"> Gas</label><br>
+							<input type="checkbox" class="fuel" id="hydro" name="hydro" value="hydro"><label for="hydro"> Hydro</label><br>
+							<input type="checkbox" class="fuel" id="nuclear" name="nuclear" value="nuclear"><label for="nuclear"> Nuclear</label><br>
+							<input type="checkbox" class="fuel" id="others" name="others" value="others"><label for="others"> Others</label><br>
 						</div>
 						<div style="padding: 0 5px 0 10px;">
-							<input type="checkbox" class="fuel" id="oil" name="oil" value="oil" checked><label for="oil"> Oil</label><br>
-							<input type="checkbox" class="fuel" id="solar" name="solar" value="solar" checked><label for="solar"> Solar</label><br>
-							<input type="checkbox" class="fuel" id="waste" name="waste" value="waste" checked><label for="waste"> Waste</label><br>
-							<input type="checkbox" class="fuel" id="wind" name="wind" value="wind" checked><label for="wind"> Wind</label><br>
+							<input type="checkbox" class="fuel" id="oil" name="oil" value="oil"><label for="oil"> Oil</label><br>
+							<input type="checkbox" class="fuel" id="solar" name="solar" value="solar"><label for="solar"> Solar</label><br>
+							<input type="checkbox" class="fuel" id="waste" name="waste" value="waste"><label for="waste"> Waste</label><br>
+							<input type="checkbox" class="fuel" id="wind" name="wind" value="wind"><label for="wind"> Wind</label><br>
 						</div>
 					</div>
 				</div>
@@ -85,9 +88,8 @@
 		</div>
 
 		<div class="graphs" style="width: 82%;">
-			<div style="width: 100%; height: 500px; border-bottom: 1px solid black;">
-				<h2 style="text-align: center; margin: 0px;"> Temperature and Power Plant Map </h2>
-				
+			<div id="map" style="width: 100%; height: 500px; border-bottom: 1px solid black;">
+				<h2 style="text-align: center; margin: 1px;"> Temperature and Power Plant Map </h2>
 				
 			</div>
 
@@ -98,7 +100,7 @@
 				</div>
 
 				<div style="width: 35%;">
-					<h2 style="text-align: center;  margin-bottom: 7px;">Fuel Type Distribution</h2>
+					<h2 style="text-align: center;">Fuel Type Distribution</h2>
 					<div id="donut-chart" style="margin:auto;width: 75%;"></div>
 				</div>
 			</div>
