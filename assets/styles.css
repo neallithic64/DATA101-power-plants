@@ -39,3 +39,18 @@ p {
 .flex {
 	display: flex;
 }
+
+.tooltip{
+	position: absolute;	
+	  text-align: center;	
+	  width: 60px;	
+	  height: 28px;
+	  padding: 2px;	
+	  font: 12px sans-serif;	
+	  background: beige;	
+	  border: 0px;
+	  border-radius: 8px;
+	  color:gray;
+	  box-shadow: -3px 3px 15px #888888;
+	  opacity:0;	
+	}
