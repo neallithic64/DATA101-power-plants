@@ -1,4 +1,4 @@
-$(document).ready(async function() {
+$(document).ready(function() {
 	$("#year-slider").slider({
 		range: true,
 		min: 1961,
@@ -46,12 +46,9 @@ $(document).ready(async function() {
 		console.log(fuels);
 	});
 	
-	await getBothSets();
+	d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv", function(data1) {
+		d3.csv("global_power_plant_database.csv", function(data2) {
+			console.log(data1);
+		});
+	});
 });
-
-async function getBothSets() {
-	let data1 = await d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv");
-	let data2 = await d3.csv("global_power_plant_database.csv");
-	
-	console.log(data1);
-}
