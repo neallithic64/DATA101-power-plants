@@ -75,8 +75,8 @@ $(document).ready(function() {
 		let coralblue = '#657fa6';
 		let deepblue = '#02273a';
 		let darkgray = '#808080';
-	var allDonutColors = [darknude,rose,mustard,purple,greenish,teal,coralblue,deepblue,darkgray];
-	// var allDonutColors = ['red','orange','yellow','green','teal','blue','violet','pink','gray'];
+	// var allDonutColors = [darknude,rose,mustard,purple,greenish,teal,coralblue,deepblue,darkgray];
+	var allDonutColors = ['#E41A1C', '#377EB8', '#4DAF4A', '#984EA3', '#FF7F00', '#FFFF33', '#A65628', '#F781BF', '#999999'];
 	// var selectedFuels = ['coal','gas','hydro','nuclear'];
 	// var selectedColors = ["red", "blue", "yellow", "green"];
 	var data = [10,80,20,30,50,20,10,5,20];
