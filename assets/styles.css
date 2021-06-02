@@ -6,12 +6,17 @@ h1 {
 	text-align: center;
 }
 
-h3, h4 {
+h3, h4, p {
 	margin: 1.5px;
 }
 
 h4 {
 	color:darkslategrey;
+}
+
+p {
+	font-size: 14px;
+	color: darkgrey;
 }
 
 .content {
