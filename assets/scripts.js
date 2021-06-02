@@ -6,8 +6,10 @@ $(document).ready(function() {
 		values: [ 1961, 2010 ],
 		slide: function( event, ui ) {
 			var years = ui.values;
+			var yearFrom = years[0];
+			var yearTo = years[1];
 			console.log(years);
-			$('#years').text(years);
+			$('#years').text(yearFrom + " - " + yearTo);
 		}
 	});
 	
@@ -18,8 +20,10 @@ $(document).ready(function() {
 		values: [ 1, 22000 ],
 		slide: function( event, ui ) {
 			var capacities = ui.values;
+			var capacityFrom = capacities[0];
+			var capacityTo = capacities[1];
 			console.log(capacities);
-			$('#capacities').text(capacities);
+			$('#capacities').text(capacityFrom + " - " + capacityTo);
 		}
 	});
 	
@@ -49,6 +53,7 @@ $(document).ready(function() {
 	d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv", function(data1) {
 		d3.csv("global_power_plant_database.csv", function(data2) {
 			console.log(data1);
+			console.log(data2);
 		});
 	});
 
@@ -69,14 +74,14 @@ $(document).ready(function() {
 	// var allDonutColors = ['red','orange','yellow','green','teal','blue','violet','pink','gray'];
 	// var selectedFuels = ['coal','gas','hydro','nuclear'];
 	// var selectedColors = ["red", "blue", "yellow", "green"];
-	var selectedColors = [];
+	var data = [10,80,20,30,50,20,10,5,20];
 	// var data = [];
 	var sum = 0;
-	var data = [10,80,20,30,50,20,10,5,20];
-
+	var selectedColors = [];
 	for(let i=0;i<selectedFuels.length;i++) {
 		selectedColors.push(allDonutColors[allDonutFuels.indexOf(selectedFuels[i])]);
 		sum += data[i];
+
 	// data.push(10*i+10);
 	}
 
