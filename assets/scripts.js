@@ -14,12 +14,16 @@ $(document).ready(function() {
 	$("#year-slider").slider({
 		range: true,
 		min: 1961,
-		max: 2010,
-		values: [ 1961, 2010 ],
+		max: 2018,
+		values: [ 1961, 2018 ],
 		slide: function( event, ui ) {
-			years = ui.values;
-			console.log(years);
+			let years = ui.values;
 			$('#years').text(years[0] + " - " + years[1]);
+			d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv", function(data1) {
+				d3.csv("global_power_plant_database.csv", function(data2) {
+					makeBarLine(formatBLDataSet(data1, data2, "Philippines", years[0], years[1]));
+				});
+			});
 		}
 	});
 	
@@ -37,8 +41,7 @@ $(document).ready(function() {
 	
 	d3.csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv", function(data1) {
 		d3.csv("global_power_plant_database.csv", function(data2) {
-			// unset from hardcoded after
-			makeBarLine(formatBLDataSet(data1, data2, "Philippines", 1990, 2019));
+			makeBarLine(formatBLDataSet(data1, data2, "Philippines", 1961, 2018));
 			powerplantData = data2;
 			d2length = data2.length;
 			console.log("d2 " + d2length);
@@ -294,6 +297,9 @@ $(document).ready(function() {
 });
 
 function makeBarLine(dataset) {
+	let div = document.querySelector("#barline");
+	div.innerHTML = "";
+	
 	let xScale = d3.scaleBand()
 					.rangeRound([0, BLwidth])
 					.padding(0.1)
@@ -335,9 +341,9 @@ function makeBarLine(dataset) {
 		.attr("width", xScale.bandwidth())
 		.attr("height", function(d) { return BLheight - yScale(d[1]); })
 		.attr("class", function(d) {
-			if (d[2] < 10)			return "bar bar1";
-			else if (d[2] < 30)		return "bar bar2";
-			else if (d[2] < 50)		return "bar bar3";
+			if (d[1] < 10)			return "bar bar1";
+			else if (d[1] < 100)	return "bar bar2";
+			else if (d[1] < 250)	return "bar bar3";
 			else					return "bar bar4";
 		});
 
@@ -392,15 +398,17 @@ function formatBLDataSet(temp, power, country, year_start, year_end) {
 		data.push([i, count]);
 	}
 	
+	let multiplier = data[data.length-1][1] / 2;
+	console.log(multiplier);
+	
 	// temp change
 	let countryTemps;
 	for (let j = 0; j < temp.length; j++) if (temp[j].Area === country) countryTemps = temp[j];
 	if (countryTemps !== undefined) {
 		let values = Object.values(countryTemps);
 		for (let i = year_start - 1961; i < year_end - 1961 + 1; i++) {
-			data[i-(year_start-1961)].push(values[i] == "" ? 0 : Number.parseFloat(values[i]) * 10);
+			data[i-(year_start-1961)].push(values[i] == "" ? 0 : Number.parseFloat(values[i]) * multiplier);
 		}
-		console.log(values, data);
 	}
 	return data;
 }
