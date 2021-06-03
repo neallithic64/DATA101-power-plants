@@ -78,7 +78,7 @@ $(document).ready(function() {
 	
 // DONUT
 function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels) {
-	console.log(years,capacities,selectedCountry,selectedAreas,selectedFuels)
+	// console.log(years,capacities,selectedCountry,selectedAreas,selectedFuels)
 	let div = document.querySelector("#donut-chart");
 	div.innerHTML = "";
 	if (selectedCountry!=null & selectedCountry!=undefined) document.querySelector("#donutPlace").innerHTML = selectedCountry;
@@ -115,7 +115,7 @@ function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels)
         	var mouseVal = d3.mouse(this);
         	donutHover.style("display","none");
         	donutHover
-        	.html( inputFuels[i][0].toUpperCase() + inputFuels[i].slice(1) + "</br>" + (gwhData[i]/1000).toFixed(3).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") )
+        	.html( inputFuels[i][0].toUpperCase() + inputFuels[i].slice(1) + "</br>" + gwhData[i])//(gwhData[i]/1000).toFixed(3).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")*/ )
             .style("left", (d3.event.pageX+12) + "px")
             .style("top", (d3.event.pageY-10) + "px")
             .style("opacity", 1)
@@ -135,7 +135,7 @@ function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels)
 				.attr("transform", function(d,i){ return "translate(" + (320) + "," + (i * 15 + 20) + ")"; })
 				.attr("class", "legend");
 	legendG.append("circle").attr("r", 5).attr("fill", function(d,i) { return selectedColors[i]; });
-	legendG.append("text").text(function(d,i) {return (inputFuels[i] + " (" + (gwhData[i]*100/sum).toFixed(2) + "%)" ) ;}).style("font-size", 12).attr("y", 3).attr("x", 11);
+	legendG.append("text").text(function(d,i) {return (gwhData[i]==0)? inputFuels[i] : (inputFuels[i] + " (" + (gwhData[i]*100/sum).toFixed(2) + "%)" ) ;}).style("font-size", 12).attr("y", 3).attr("x", 11);
 }
 
 function sumFilteredFuelEmission(yearsInput,capacityInput,countryInput,areasInput,fuel) {
@@ -147,10 +147,11 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,countryInput,areasInpu
 				if ((capacityInput[0]==1 && capacityInput[1]==22500) || (capacityInput[0] <= dataPower[i].capacity_mw && dataPower[i].capacity_mw <= capacityInput[1]))
 				{	if (countryInput!=undefined && countryInput!=null)
 						{ if(countryInput === dataPower[i].country_long) 
-			 				sum = sum + Number(dataPower[i].estimated_generation_gwh); }
-							// sum++;
+			 				// sum = sum + Number(dataPower[i].estimated_generation_gwh); }
+							sum++;}
 					else if (areasInput.includes(dataPower[i].Continent.split(' ')[0]) || areasInput.length==7)
-						sum = sum + Number(dataPower[i].estimated_generation_gwh);
+						// sum = sum + Number(dataPower[i].estimated_generation_gwh);
+						sum++;
 				}
 	}
 	return sum;
