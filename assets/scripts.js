@@ -159,46 +159,53 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 		.append("svg")
 		.attr("width", 1000)
 		.attr("height", 450);
-	
+
 	// Map and projection
 	var projection = d3.geoMercator()
 		.scale(90)
 		.center([0,30])
-		.rotate([8.2,0])
-		.translate([width / 2, height / 2]);
+		.translate([width / 2, height / 2])
 	var path = d3.geoPath().projection(projection);
-	
+
 	// Data and color scale
 	var data = d3.map();
-	var colorScale = d3.scaleOrdinal()
-		.domain([-0.103352941, 1.511571429])
-		.range(["#69B34C", "#FAB733", "#FF8E15", "#FF0D0D"]);
-	
+
+
 	// Load external data and boot
 	d3.queue()
 		.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
 		.defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) { data.set(d.code, +d.pop); })
-		.defer(d3.csv, "https://raw.githubusercontent.com/neallithic64/DATA101-power-plants/master/Environment_Temperature_change_E_All_Data_NOFLAG.csv", function(d) { data.set(d.Area, d.Continent, d.Average); })
-		.defer(d3.csv, "https://raw.githubusercontent.com/neallithic64/DATA101-power-plants/master/global_power_plant_database.csv", function(d){ data.set(d.latitude, d.longitude); })
+		.defer(d3.csv, "https://raw.githubusercontent.com/neallithic64/DATA101-power-plants/master/Environment_Temperature_change_E_All_Data_NOFLAG.csv")
+		.defer(d3.csv, "https://raw.githubusercontent.com/neallithic64/DATA101-power-plants/master/global_power_plant_database.csv")
 		.await(ready);
 	
-	// Tooltip
-	// var tip = d3.tip()
-	// 	.attr('class', 'd3-tip')
-	// 	.offset([-5, 0])
-	// 	.html(function(d) {
-	// 		var dataRow = countryById.get(d.properties.name);
-	// 		if (dataRow) {
-	// 			console.log(dataRow);
-	// 			return dataRow.states + ": " + dataRow.mortality;
-	// 		} else {
-	// 			console.log("no dataRow", d);
-	// 			return d.properties.name + ": No data.";
-	// 		}
-	// 	})
-	
-	function ready(error, topo, tempData, plantData) {
-		let mouseOver = function(d) {
+	function ready(error, topo, popData, tempData, plantData) {
+		// Tooltip
+		function getTipData(country, tempData, plantData) {
+			tipData = [];
+			var i = j = k = 0;
+			var tempCountry = country;
+			for (j = 0; j < tempData.length; j++) {
+				if (tempCountry === tempData[j].Area)
+					var tempAve = tempData[j].Average;
+			}
+			var tempCount = 0;
+			for (k = 0; k < plantData.length; k++) {
+				if (tempCountry === plantData[k].country_long)
+					var tempCount = tempCount + 1; 
+			}
+			if (tempAve == null) tempAve = "No data."
+			if (tempCount === 0) tempCount = "No data."
+			tipData.push([tempCountry, tempAve, tempCount]);
+			return tipData;
+		}
+
+		// Tooltip variable
+		var mapTip = d3.select("div.mapTip");
+
+
+		// Mouse hover function
+		let mouseOver = function(d, i) {
 			d3.selectAll(".Country")
 			.transition()
 			.duration(200)
@@ -207,9 +214,23 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			.transition()
 			.duration(200)
 			.style("opacity", 1)
+
+			displayTip = getTipData(d.properties.name, tempData, plantData);
+			// console.log(displayTip);
+			return mapTip.style("hidden", false).html(displayTip[0][0] + "<br> Average Temp: " + displayTip[0][1] + "<br> Plant Count: " + displayTip[0][2]);
 		}
 
-		let mouseLeave = function(d) {
+		// Mouse move function
+		let mouseMove = function(d, i) {
+			displayTip = getTipData(d.properties.name, tempData, plantData);
+			mapTip.classed("hidden", false)
+			.style("top", (d3.event.pageY) + "px")
+			.style("left", (d3.event.pageX + 10) + "px")
+			.html(displayTip[0][0] + "<br> Average Temp: " + displayTip[0][1] + "<br> Plant Count: " + displayTip[0][2]);
+		}
+
+		// Mouse leave function
+		let mouseLeave = function(d, i) {
 			d3.selectAll(".Country")
 			.transition()
 			.duration(200)
@@ -217,48 +238,96 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			d3.select(this)
 			.transition()
 			.duration(200)
+
+			return mapTip.classed("hidden", true);
 		}
 
+		// Invisible rect for zoom reset
 		svg.append("rect")
 			.attr("width", 1000)
 			.attr("height", 450)
 			.on("click", reset)
 			.style("fill", "transparent");
 
+
+		// Main svg
 		var g = svg.append("g");
 
+		function getColors(tempData) {
+			var average = [];
+			for (var i = 0; i < tempData.length; i++) {
+				average.push(tempData[i].Average);
+			}
+			return average;
+		}
+
+		var tempAverage = getColors(tempData);
+
+		var colorScale = d3.scaleQuantize()
+			.domain([-0.103352941, 1.511571429])
+			.range(["#69B34C", "#FAB733", "#FF8E15", "#FF0D0D"]);
+
+		// Base map
 		g.selectAll("path")
 			.data(topo.features)
 			.enter()
 			.append("path")
 			// draw each country
 			.attr("d", path)
-			// set the color of each country=
-			.attr("fill", function (tempData) {
-				tempData.Average = data.get(tempData.id) || 0;
-				return colorScale(tempData.Average);
-			})
+			// set the color of each country
+			// .attr("fill", function (tempData) {
+			// 	tempData.average = data.get(tempData.id) || 0;
+			// 	return colorScale(tempData.average);
+			// })
+			.attr("fill", function (d, i) { console.log(tempAverage[i], colorScale(tempAverage[i])); return colorScale(tempAverage[i]); } )
 			.style("stroke-width", 0.1)
 			.style("stroke", "gray")
 			.attr("class", function(d){ return "Country" })
 			.style("opacity", .8)
 			.on("mouseover", mouseOver)
+			.on("mousemove", mouseMove)
 			.on("mouseleave", mouseLeave)
-			.on("click", function (d) { click(d); })
-		
+			.on("click", function (d) { click(d); });
+
+		// Path
 		g.append("path")
 			.data(topo.features)
 			.enter()
 			.append("path")
 			.attr("class", "mesh")
 			.attr("d", path);
-		
-		function click(d) {
 
-		if (active === d) return reset();
+		// Getting coordinates of power plants
+		function getCoords(plantData) {
+			var coords = [];
+			for (var i = 0; i < plantData.length; i++) {
+				coords.push([plantData[i].longitude, plantData[i].latitude]);
+			}
+			return coords;
+		}
+
+		// New projector for power plants layer
+		var projectionPlants = d3.geoMercator()
+			.scale(90)
+			.center([0,30])
+			.translate([width / 2, height / 2])
+
+		// Add power plant circles to svg
+		g.selectAll("circle")
+			.data(getCoords(plantData)).enter()
+			.append("circle")
+			.attr("cx", function (d) { return projectionPlants.rotate([0, 0, 0])(d)[0] })
+			.attr("cy", function (d) { return projectionPlants.rotate([0, 0, 0])(d)[1] })
+			.attr("r", "0.3px")
+			.attr("fill", "blue")
+
+		// Country click then zoom function
+		function click(d) {
+			// console.log(d);
+			if (active === d) return reset();
 			g.selectAll(".active").classed("active", active = true);
 			d3.select(".Country").classed("active", active = d);
-			
+
 			var b = path.bounds(d);
 
 			g.transition().duration(750).attr("transform",
@@ -267,23 +336,11 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			+ "translate(" + -(b[1][0] + b[0][0]) / 2 + "," + -(b[1][1] + b[0][1]) / 2 + ")");
 		}
 
+		// Zoom reset function
 		function reset() {
 			g.selectAll(".active").classed("active", active = false);
 			g.transition().duration(750).attr("transform", "");
 		}
-		
-		// points
-		aa = [-122.490402, 37.786453];
-		// bb = [-122.389809, 37.72728];
-
-		// add circles to svg
-		g.selectAll("circle")
-			.data([aa]).enter()
-			.append("circle")
-			.attr("cx", function (d) { return projection(d)[0]; })
-			.attr("cy", function (d) { return projection(d)[1]; })
-			.attr("r", "1px")
-			.attr("fill", "blue")
 
 	}
 });
