@@ -5,7 +5,8 @@ var allAreas = ["Africa","Antarctica","Asia","Australia","Europe","North","South
 var allFuels = ['Coal','Gas','Hydro','Nuclear','Oil','Solar','Waste','Wind','Others'];
 var selectedAreas = [];
 var selectedFuels = [];
-var country;
+var selectedCountry;
+var mouseCountry;
 var dataTemp;
 var dataPower;
 
@@ -20,7 +21,7 @@ $(document).ready(function() {
 			dataTemp = data1;
 			dataPower = data2;
 			makeBarLine(formatBLDataSet(dataTemp, dataPower, "Philippines", 1961, 2018));
-			makeDonut(years,capacities,country,selectedAreas,selectedFuels);
+			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		});
 	});
 
@@ -33,7 +34,7 @@ $(document).ready(function() {
 			let years = ui.values;
 			$('#years').text(years[0] + " - " + years[1]);
 			makeBarLine(formatBLDataSet(dataTemp, dataPower, "Philippines", years[0], years[1]));
-			makeDonut(years,capacities,country,selectedAreas,selectedFuels);
+			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 	});
 	
@@ -46,7 +47,7 @@ $(document).ready(function() {
 			let capacities = ui.values;
 			console.log(capacities);
 			$('#capacities').text(capacities[0] + " - " + capacities[1]);
-			makeDonut(years,capacities,country,selectedAreas,selectedFuels);
+			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 	});
 	
@@ -58,7 +59,7 @@ $(document).ready(function() {
 			selectedAreas.splice(index,1);
 		}
 		console.log(selectedAreas);
-		makeDonut(years,capacities,country,selectedAreas,selectedFuels);
+		makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 	});
 
 	// var selectedFuels = ['coal','gas','hydro','nuclear','oil','solar','waste','wind','others'];
@@ -70,12 +71,12 @@ $(document).ready(function() {
 			selectedFuels.splice(index,1);
 		}
 		console.log(selectedFuels);
-		makeDonut(years,capacities,country,selectedAreas,selectedFuels);
+		makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 	});
 	
 	
 // DONUT
-function makeDonut(years,capacities,country,selectedAreas,selectedFuels) {
+function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels) {
 	let div = document.querySelector("#donut-chart");
 	div.innerHTML = "";
 	var inputAreas = [];
@@ -93,14 +94,14 @@ function makeDonut(years,capacities,country,selectedAreas,selectedFuels) {
 	var selectedColors = [];
 	for (let i=0;i<inputFuels.length;i++) {
 		selectedColors.push(allDonutColors[allDonutFuels.indexOf(inputFuels[i])]);
-		gwhData.push(sumFilteredFuelEmission(years,capacities,country,inputAreas,inputFuels[i]))
+		gwhData.push(sumFilteredFuelEmission(years,capacities,selectedCountry,inputAreas,inputFuels[i]))
 		sum += gwhData[i];
 		// gwhData.push(10*i+10);
 	}
 
 	var r = 150;
 	var color = d3.scale.ordinal().range(selectedColors);
-	var canvas = d3.select("#donut-chart").append("svg").attr("width", 375).attr("height", 300);
+	var canvas = d3.select("#donut-chart").append("svg").attr("width", 425).attr("height", 300);
 	var donutHover = d3.select("body").append("div") .attr("class", "tooltip");
 	var group = canvas.append("g").attr("transform", "translate(150,150)");
 	var arc = d3.svg.arc().innerRadius(50).outerRadius(r);
@@ -127,23 +128,27 @@ function makeDonut(years,capacities,country,selectedAreas,selectedFuels) {
 		.text(function(d,i) {return (gwhData[i]*100/sum).toFixed(2) + "%";});
 
 	var legendG = canvas.selectAll(".legend").data(pie(gwhData)).enter().append("g")
-				.attr("transform", function(d,i){ return "translate(" + (325) + "," + (i * 15 + 20) + ")"; })
+				.attr("transform", function(d,i){ return "translate(" + (320) + "," + (i * 15 + 20) + ")"; })
 				.attr("class", "legend");
 	legendG.append("circle").attr("r", 5).attr("fill", function(d,i) { return selectedColors[i]; });
-	legendG.append("text").text(function(d,i) {return inputFuels[i];}).style("font-size", 12).attr("y", 3).attr("x", 11);
+	legendG.append("text").text(function(d,i) {return (inputFuels[i] + " (" + (gwhData[i]*100/sum).toFixed(2) + "%)" ) ;}).style("font-size", 12).attr("y", 3).attr("x", 11);
 }
 
-function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fuel) {
+function sumFilteredFuelEmission(yearsInput,capacityInput,countryInput,areasInput,fuel) {
 	var sum = 0;
 	for (let i=0 ; i<dataPower.length; i++) {
-		if (areasInput.includes(dataPower[i].Continent.split(' ')[0]) || areasInput.length==7)
-			if(country == undefined || country == null || country === dataPower[i].country) {
-				if(!allFuels.includes(dataPower[i].primary_fuel)) dataPower[i].primary_fuel = "Others";
-				if (fuel === dataPower[i].primary_fuel)
-					if((yearsInput[0]==1961 && yearsInput[1]==2018) || (yearsInput[0] <= dataPower[i].commissioning_year && dataPower[i].commissioning_year <= yearsInput[1]))
-						if ((capacityInput[0]==1 && capacityInput[1]==22500) || (capacityInput[0] <= dataPower[i].capacity_mw && dataPower[i].capacity_mw <= capacityInput[1]))
-							sum = sum + Number(dataPower[i].estimated_generation_gwh);
-	}}
+		if(!allFuels.includes(dataPower[i].primary_fuel)) dataPower[i].primary_fuel = "Others";
+		if (fuel === dataPower[i].primary_fuel)
+			if((yearsInput[0]==1961 && yearsInput[1]==2018) || (yearsInput[0] <= dataPower[i].commissioning_year && dataPower[i].commissioning_year <= yearsInput[1]))
+				if ((capacityInput[0]==1 && capacityInput[1]==22500) || (capacityInput[0] <= dataPower[i].capacity_mw && dataPower[i].capacity_mw <= capacityInput[1]))
+				{	if (countryInput!=undefined && countryInput!=null)
+						{ if(countryInput === dataPower[i].country_long) 
+			 				sum = sum + Number(dataPower[i].estimated_generation_gwh); }
+							// sum++;
+					else if (areasInput.includes(dataPower[i].Continent.split(' ')[0]) || areasInput.length==7)
+						sum = sum + Number(dataPower[i].estimated_generation_gwh);
+				}
+	}
 	return sum;
 }
 
@@ -227,6 +232,7 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			.style("top", (d3.event.pageY) + "px")
 			.style("left", (d3.event.pageX + 10) + "px")
 			.html(displayTip[0][0] + "<br> Average Temp: " + displayTip[0][1] + "<br> Plant Count: " + displayTip[0][2]);
+			mouseCountry = displayTip[0][0];
 		}
 
 		// Mouse leave function
@@ -238,6 +244,8 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			d3.select(this)
 			.transition()
 			.duration(200)
+
+			selectedCountry = null;
 
 			return mapTip.classed("hidden", true);
 		}
@@ -334,6 +342,12 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,country,areasInput,fue
 			"translate(" + projection.translate() + ")"
 			+ "scale(" + .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height) + ")"
 			+ "translate(" + -(b[1][0] + b[0][0]) / 2 + "," + -(b[1][1] + b[0][1]) / 2 + ")");
+
+	// SELECT COUNTRY INTERACT
+			selectedCountry = mouseCountry;
+			console.log(selectedCountry);
+			makeBarLine(formatBLDataSet(dataTemp, dataPower, selectedCountry, 1961, 2018));
+			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 
 		// Zoom reset function
