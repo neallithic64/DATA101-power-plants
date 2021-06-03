@@ -1,4 +1,9 @@
 // Definitions
+var years;
+var capacities;
+var country;
+var powerplantData;
+var d2length;
 
 var BLmargin = {top: 0, right: 10, bottom: 30, left: 10},
 		BLwidth = 784,
@@ -12,9 +17,9 @@ $(document).ready(function() {
 		max: 2010,
 		values: [ 1961, 2010 ],
 		slide: function( event, ui ) {
-			var years = ui.values;
+			years = ui.values;
 			console.log(years);
-			$('#years').text(years);
+			$('#years').text(years[0] + " - " + years[1]);
 		}
 	});
 	
@@ -24,9 +29,9 @@ $(document).ready(function() {
 		max: 22000,
 		values: [ 1, 22000 ],
 		slide: function( event, ui ) {
-			var capacities = ui.values;
+			capacities = ui.values;
 			console.log(capacities);
-			$('#capacities').text(capacities);
+			$('#capacities').text(capacities[0] + " - " + capacities[1]);
 		}
 	});
 	
@@ -34,11 +39,14 @@ $(document).ready(function() {
 		d3.csv("global_power_plant_database.csv", function(data2) {
 			// unset from hardcoded after
 			makeBarLine(formatBLDataSet(data1, data2, "Philippines", 1990, 2019));
+			powerplantData = data2;
+			d2length = data2.length;
+			console.log("d2 " + d2length);
 		});
 	});
 	
-	var selectedAreas = ["africa","antarctica","asia","australia","europe","north","south"];
-	
+	var selectedAreas = [];
+	// var selectedAreas = ["africa","antarctica","asia","australia","europe","north","south"];
 	$('.area').click(function() {
 		if ($(this).is(':checked'))
 			selectedAreas.push($(this).attr("id"));
@@ -49,8 +57,8 @@ $(document).ready(function() {
 		console.log(selectedAreas);
 	});
 
-	var selectedFuels = ['coal','gas','hydro','nuclear','oil','solar','waste','wind','others'];
-	
+	var selectedFuels = [];
+	// var selectedFuels = ['coal','gas','hydro','nuclear','oil','solar','waste','wind','others'];
 	$('.fuel').click(function() {
 		if ($(this).is(':checked'))
 		selectedFuels.push($(this).attr("id"));
@@ -75,18 +83,20 @@ $(document).ready(function() {
 		let coralblue = '#657fa6';
 		let deepblue = '#02273a';
 		let darkgray = '#808080';
-	// var allDonutColors = [darknude,rose,mustard,purple,greenish,teal,coralblue,deepblue,darkgray];
+	//var allDonutColors = [darknude,rose,mustard,purple,greenish,teal,coralblue,deepblue,darkgray];
 	var allDonutColors = ['#E41A1C', '#377EB8', '#4DAF4A', '#984EA3', '#FF7F00', '#FFFF33', '#A65628', '#F781BF', '#999999'];
 	// var selectedFuels = ['coal','gas','hydro','nuclear'];
+	var selectedFuels = ['coal','gas','hydro','nuclear','oil','solar','waste','wind','others'];
 	// var selectedColors = ["red", "blue", "yellow", "green"];
-	var data = [10,80,20,30,50,20,10,5,20];
-	// var data = [];
+	// var gwhData = [10,80,20,30,50,20,10,5,20];
+	var gwhData = [];
 	var sum = 0;
 	var selectedColors = [];
 	for (let i=0;i<selectedFuels.length;i++) {
 		selectedColors.push(allDonutColors[allDonutFuels.indexOf(selectedFuels[i])]);
-		sum += data[i];
-		// data.push(10*i+10);
+		gwhData.push(sumFilteredFuelEmission(years,capacities,country,selectedAreas,selectedFuels))
+		sum += gwhData[i];
+		// gwhData.push(10*i+10);
 	}
 
 	var r = 120;
@@ -95,13 +105,13 @@ $(document).ready(function() {
 	var donutHover = d3.select("body").append("div") .attr("class", "tooltip");
 	var group = canvas.append("g").attr("transform", "translate(120,120)");
 	var arc = d3.svg.arc().innerRadius(50).outerRadius(r);
-	var pie = d3.layout.pie().value(function (d, i) { return data[i]; });
-	var arcs = group.selectAll(".arc").data(pie(data)).enter().append("g").attr("class", "arc")
+	var pie = d3.layout.pie().value(function (d, i) { return gwhData[i]; });
+	var arcs = group.selectAll(".arc").data(pie(gwhData)).enter().append("g").attr("class", "arc")
 		.on("mousemove",function(d,i){
         	var mouseVal = d3.mouse(this);
         	donutHover.style("display","none");
         	donutHover
-        	.html( selectedFuels[i][0].toUpperCase() + selectedFuels[i].slice(1) + "</br>" + data[i])
+        	.html( selectedFuels[i][0].toUpperCase() + selectedFuels[i].slice(1) + "</br>" + gwhData[i])
             .style("left", (d3.event.pageX+12) + "px")
             .style("top", (d3.event.pageY-10) + "px")
             .style("opacity", 1)
@@ -115,14 +125,30 @@ $(document).ready(function() {
 	arcs.append("path").attr("d", arc).attr("fill", function(d,i) {return selectedColors[i];});
 	arcs.append("text").attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")";})
 		.attr("text-anchor", "middle").attr("font-size", "12px").style("fill", "white")
-		.text(function(d,i) {return Math.round(100*(data[i]/sum)) + "%";});
+		.text(function(d,i) {return Math.round(100*(gwhData[i]/sum)) + "%";});
 
-	var legendG = canvas.selectAll(".legend").data(pie(data)).enter().append("g")
+	var legendG = canvas.selectAll(".legend").data(pie(gwhData)).enter().append("g")
 				.attr("transform", function(d,i){ return "translate(" + (260) + "," + (i * 15 + 20) + ")"; })
 				.attr("class", "legend");
 	legendG.append("circle").attr("r", 5).attr("fill", function(d,i) { return selectedColors[i]; });
 	legendG.append("text").text(function(d,i) {return selectedFuels[i];}).style("font-size", 12).attr("y", 3).attr("x", 11);
 	
+	function sumFilteredFuelEmission(row,yearsInput,capacityInput,country,areasInput,fuel) {
+		var sum = 0;
+		console.log("before lloop");
+		for (let i=0 ; i<d2length; i++) {
+			console.log("first loop");
+			console.log(powerplantData[i].country, powerplantData[i].continent, powerplantData[i].primary_fuel, powerplantData[i].commissioning_year);
+			if(country==undefined || country == null || country == powerplantData[i].country)
+				if ((areasInput.includes(powerplantData[i].continent) || area==null) && (fuel == powerplantData[i].primary_fuel || fuel == undefined || fuel ==null))
+					if((startyear==1961 && endyear==2019) || (yearsInput[0] <= powerplantData[i].commissioning_year && powerplantData[i].commissioning_year <= yearsInput[1]))
+						if((capacityInput[0]==1 && capacityInput[1] == 22500) || (capacityInput[0] <= powerplantData[i].capacity_mw && powerplantData[i].capacity_mw <= capacityInput[1]))
+							sum += powerplantData[i].estimated_generation_gwh;
+							console.log(powerplantData[i]);
+		}
+		console.log('waa ' + sum);
+		return sum+1;
+	}
 	
 	
 	// MAP
