@@ -98,11 +98,11 @@ function makeDonut(years,capacities,country,selectedAreas,selectedFuels) {
 		// gwhData.push(10*i+10);
 	}
 
-	var r = 120;
+	var r = 150;
 	var color = d3.scale.ordinal().range(selectedColors);
-	var canvas = d3.select("#donut-chart").append("svg").attr("width", 325).attr("height", 250);
+	var canvas = d3.select("#donut-chart").append("svg").attr("width", 375).attr("height", 300);
 	var donutHover = d3.select("body").append("div") .attr("class", "tooltip");
-	var group = canvas.append("g").attr("transform", "translate(120,120)");
+	var group = canvas.append("g").attr("transform", "translate(150,150)");
 	var arc = d3.svg.arc().innerRadius(50).outerRadius(r);
 	var pie = d3.layout.pie().value(function (d, i) { return gwhData[i]; });
 	var arcs = group.selectAll(".arc").data(pie(gwhData)).enter().append("g").attr("class", "arc")
@@ -127,7 +127,7 @@ function makeDonut(years,capacities,country,selectedAreas,selectedFuels) {
 		.text(function(d,i) {return (gwhData[i]*100/sum).toFixed(2) + "%";});
 
 	var legendG = canvas.selectAll(".legend").data(pie(gwhData)).enter().append("g")
-				.attr("transform", function(d,i){ return "translate(" + (260) + "," + (i * 15 + 20) + ")"; })
+				.attr("transform", function(d,i){ return "translate(" + (325) + "," + (i * 15 + 20) + ")"; })
 				.attr("class", "legend");
 	legendG.append("circle").attr("r", 5).attr("fill", function(d,i) { return selectedColors[i]; });
 	legendG.append("text").text(function(d,i) {return inputFuels[i];}).style("font-size", 12).attr("y", 3).attr("x", 11);
