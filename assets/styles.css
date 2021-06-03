@@ -44,10 +44,10 @@ p {
 .tooltip{
 	position: absolute;	
 	text-align: center;	
-	width: 60px;	
-	height: 28px;
+	width: 75px;	
+	height: 30x;
 	padding: 2px;	
-	font: 12px sans-serif;	
+	font: 15px sans-serif;	
 	background: beige;	
 	border: 0px;
 	border-radius: 8px;
