@@ -14,7 +14,7 @@ h4 {
 	color: darkslategrey;
 }
 
-p {
+p,span {
 	font-size: 14px;
 	color: darkgrey;
 }
@@ -33,7 +33,7 @@ p {
 	padding-right: 1rem;
 	border-right: 2px solid black;
 	border-color: black;
-	width: 18%;
+	width: 15%;
 }
 
 .flex {

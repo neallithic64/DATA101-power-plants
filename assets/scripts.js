@@ -45,7 +45,7 @@ $(document).ready(function() {
 		values: [ 1, 22000 ],
 		slide: function( event, ui ) {
 			let capacities = ui.values;
-			console.log(capacities);
+			// console.log(capacities);
 			$('#capacities').text(capacities[0] + " - " + capacities[1]);
 			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
@@ -58,7 +58,7 @@ $(document).ready(function() {
 			let index = selectedAreas.indexOf($(this).attr("id"));
 			selectedAreas.splice(index,1);
 		}
-		console.log(selectedAreas);
+		// console.log(selectedAreas);
 		makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 	});
 
@@ -70,7 +70,7 @@ $(document).ready(function() {
 			let index = selectedFuels.indexOf($(this).attr("id"));
 			selectedFuels.splice(index,1);
 		}
-		console.log(selectedFuels);
+		// console.log(selectedFuels);
 		makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 	});
 	
@@ -79,6 +79,8 @@ $(document).ready(function() {
 function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels) {
 	let div = document.querySelector("#donut-chart");
 	div.innerHTML = "";
+	if (selectedCountry!=null & selectedCountry!=undefined) document.querySelector("#donutPlace").innerHTML = selectedCountry;
+	else document.querySelector("#donutPlace").innerHTML =  selectedAreas;
 	var inputAreas = [];
 	var inputFuels = [];
 	if(selectedAreas.length==0) inputAreas = allAreas;
@@ -287,7 +289,7 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,countryInput,areasInpu
 			// 	tempData.average = data.get(tempData.id) || 0;
 			// 	return colorScale(tempData.average);
 			// })
-			.attr("fill", function (d, i) { console.log(tempAverage[i], colorScale(tempAverage[i])); return colorScale(tempAverage[i]); } )
+			.attr("fill", function (d, i) { /*console.log(tempAverage[i], colorScale(tempAverage[i]));*/ return colorScale(tempAverage[i]); } )
 			.style("stroke-width", 0.1)
 			.style("stroke", "gray")
 			.attr("class", function(d){ return "Country" })
@@ -462,7 +464,7 @@ function formatBLDataSet(temp, power, country, year_start, year_end) {
 	}
 	
 	let multiplier = data[data.length-1][1] / 2;
-	console.log(multiplier);
+	// console.log(multiplier);
 	
 	// temp change
 	let countryTemps;
