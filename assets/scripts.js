@@ -59,6 +59,7 @@ $(document).ready(function() {
 			selectedAreas.splice(index,1);
 		}
 		// console.log(selectedAreas);
+		selectedCountry = null;
 		makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 	});
 
@@ -77,6 +78,7 @@ $(document).ready(function() {
 	
 // DONUT
 function makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels) {
+	console.log(years,capacities,selectedCountry,selectedAreas,selectedFuels)
 	let div = document.querySelector("#donut-chart");
 	div.innerHTML = "";
 	if (selectedCountry!=null & selectedCountry!=undefined) document.querySelector("#donutPlace").innerHTML = selectedCountry;
@@ -246,8 +248,6 @@ function sumFilteredFuelEmission(yearsInput,capacityInput,countryInput,areasInpu
 			d3.select(this)
 			.transition()
 			.duration(200)
-
-			selectedCountry = null;
 
 			return mapTip.classed("hidden", true);
 		}
