@@ -29,13 +29,13 @@
 			<h2>Dashboard Filters</h2>
 			<div style="padding: 0 5px; margin: 10px 0 20px">
 				<h3>Area</h3>
-					<input type="checkbox" class="area" id="Africa" name="Africa" value="Africa"><label for="Africa"> Africa</label><br>
-					<input type="checkbox" class="area" id="Antarctica" name="Antarctica" value="Antarctica"><label for="Antarctica"> Antarctica</label><br>
-					<input type="checkbox" class="area" id="Asia" name="Asia" value="Asia"><label for="Asia"> Asia</label><br>
-					<input type="checkbox" class="area" id="Australia" name="Australia" value="Australia"><label for="Australia"> Australia</label><br>
-					<input type="checkbox" class="area" id="Europe" name="Europe" value="Europe"><label for="Europe"> Europe</label><br>
-					<input type="checkbox" class="area" id="North" name="North" value="North"><label for="North"> North America</label><br>
-					<input type="checkbox" class="area" id="South" name="South" value="South"><label for="South"> South America</label><br>
+					<input type="checkbox" class="area" id="Africa" name="checkCont" value="Africa"><label for="Africa"> Africa</label><br>
+					<input type="checkbox" class="area" id="Antarctica" name="checkCont" value="Antarctica"><label for="Antarctica"> Antarctica</label><br>
+					<input type="checkbox" class="area" id="Asia" name="checkCont" value="Asia"><label for="Asia"> Asia</label><br>
+					<input type="checkbox" class="area" id="Australia" name="checkCont" value="Australia"><label for="Australia"> Australia</label><br>
+					<input type="checkbox" class="area" id="Europe" name="checkCont" value="Europe"><label for="Europe"> Europe</label><br>
+					<input type="checkbox" class="area" id="North" name="checkCont" value="North America"><label for="North"> North America</label><br>
+					<input type="checkbox" class="area" id="South" name="checkCont" value="South America"><label for="South"> South America</label><br>
 			</div>
 
 			<div style="padding: 0 5px; margin: 10px 0 20px">
@@ -69,21 +69,23 @@
 					<h4>Fuel</h4>
 					<div class="flex">
 						<div style="padding: 0 10px 0 5px;">
-							<input type="checkbox" class="fuel" id="Coal" name="Coal" value="Coal"><label for="Coal"> Coal</label><br>
-							<input type="checkbox" class="fuel" id="Gas" name="Gas" value="Gas"><label for="Gas"> Gas</label><br>
-							<input type="checkbox" class="fuel" id="Hydro" name="Hydro" value="Hydro"><label for="Hydro"> Hydro</label><br>
-							<input type="checkbox" class="fuel" id="Nuclear" name="Nuclear" value="Nuclear"><label for="Nuclear"> Nuclear</label><br>
-							<input type="checkbox" class="fuel" id="Others" name="Others" value="Others"><label for="Others"> Others</label><br>
+							<input type="checkbox" class="fuel" id="Coal" name="checkFuel" value="Coal"><label for="Coal"> Coal</label><br>
+							<input type="checkbox" class="fuel" id="Gas" name="checkFuel" value="Gas"><label for="Gas"> Gas</label><br>
+							<input type="checkbox" class="fuel" id="Hydro" name="checkFuel" value="Hydro"><label for="Hydro"> Hydro</label><br>
+							<input type="checkbox" class="fuel" id="Nuclear" name="checkFuel" value="Nuclear"><label for="Nuclear"> Nuclear</label><br>
+							<input type="checkbox" class="fuel" id="Others" name="checkFuel" value="Others"><label for="Others"> Others</label><br>
 						</div>
 						<div style="padding: 0 5px 0 10px;">
-							<input type="checkbox" class="fuel" id="Oil" name="Oil" value="Oil"><label for="Oil"> Oil</label><br>
-							<input type="checkbox" class="fuel" id="Solar" name="Solar" value="Solar"><label for="Solar"> Solar</label><br>
-							<input type="checkbox" class="fuel" id="Waste" name="Waste" value="Waste"><label for="Waste"> Waste</label><br>
-							<input type="checkbox" class="fuel" id="Wind" name="Wind" value="Wind"><label for="Wind"> Wind</label><br>
+							<input type="checkbox" class="fuel" id="Oil" name="checkFuel" value="Oil"><label for="Oil"> Oil</label><br>
+							<input type="checkbox" class="fuel" id="Solar" name="checkFuel" value="Solar"><label for="Solar"> Solar</label><br>
+							<input type="checkbox" class="fuel" id="Waste" name="checkFuel" value="Waste"><label for="Waste"> Waste</label><br>
+							<input type="checkbox" class="fuel" id="Wind" name="checkFuel" value="Wind"><label for="Wind"> Wind</label><br>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<input type="button" id="save_value" name="save_value" value="Save Checkboxes" />
 
 		</div>
 
