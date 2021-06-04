@@ -45,8 +45,8 @@ $(document).ready(function() {
 		values: [ 1, 22000 ],
 		slide: function( event, ui ) {
 			let capacities = ui.values;
-			// console.log(capacities);
 			$('#capacities').text(capacities[0] + " - " + capacities[1]);
+			makeBarLine(formatBLDataSetEmiss(dataTemp, dataPower, "Philippines", capacities[0], capacities[1]));
 			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 	});
@@ -444,7 +444,6 @@ function makeBarLine(dataset) {
 }
 
 
-// missing: checking for continent
 function formatBLDataSet(temp, power, country, year_start, year_end) {
 	let data = [], count;
 	/* expected result
@@ -465,7 +464,6 @@ function formatBLDataSet(temp, power, country, year_start, year_end) {
 	}
 	
 	let multiplier = data[data.length-1][1] / 2;
-	// console.log(multiplier);
 	
 	// temp change
 	let countryTemps;
@@ -473,7 +471,46 @@ function formatBLDataSet(temp, power, country, year_start, year_end) {
 	if (countryTemps !== undefined) {
 		let values = Object.values(countryTemps);
 		for (let i = year_start - 1961; i < year_end - 1961 + 1; i++) {
-			data[i-(year_start-1961)].push(values[i] == "" ? 0 : Number.parseFloat(values[i]) * multiplier);
+			data[i-(year_start-1961)].push(isNaN(values[i+2]) ? 0 : Number.parseFloat(values[i+2]) * multiplier);
+		}
+	}
+	console.log(data);
+	return data;
+}
+
+function formatBLDataSetEmiss(temp, power, country, min_emiss, max_emiss) {
+	let data = [], count;
+	/* expected result
+		[   [YEAR, POWER PLANT COUNT, TEMP CHANGE], ...   ]
+	*/
+	
+	// year
+	for (let i = 0; i < 2019-1961; i++) {
+		// power plant count
+		count = 0;
+		for (let j = 0; j < power.length; j++) {
+			if (power[j].country_long === country
+					&& power[j].commissioning_year !== ""
+					&& power[j].commissioning_year == (1961+i)
+					&& power[j].estimated_generation_gwh !== ""
+					&& power[j].estimated_generation_gwh >= min_emiss
+					&& power[j].estimated_generation_gwh <= max_emiss) {
+				count++;
+			}
+		}
+		if (i > 0) count += data[i - 1][1];
+		data.push([i+1961, count]);
+	}
+	
+	let multiplier = data[data.length-1][1] / 2;
+	
+	// temp change
+	let countryTemps;
+	for (let j = 0; j < temp.length; j++) if (temp[j].Area === country) countryTemps = temp[j];
+	if (countryTemps !== undefined) {
+		let values = Object.values(countryTemps);
+		for (let i = 0; i < 2019-1961; i++) {
+			data[i].push(values[i+2] == NaN ? 0 : Number.parseFloat(values[i+2]) * multiplier);
 		}
 	}
 	return data;
