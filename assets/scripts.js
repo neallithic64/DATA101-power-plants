@@ -33,7 +33,7 @@ $(document).ready(function() {
 		slide: function( event, ui ) {
 			let years = ui.values;
 			$('#years').text(years[0] + " - " + years[1]);
-			makeBarLine(formatBLDataSet(dataTemp, dataPower, "Philippines", years[0], years[1]));
+			makeBarLine(formatBLDataSet(dataTemp, dataPower, selectedCountry, years[0], years[1]));
 			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 	});
@@ -46,7 +46,7 @@ $(document).ready(function() {
 		slide: function( event, ui ) {
 			let capacities = ui.values;
 			$('#capacities').text(capacities[0] + " - " + capacities[1]);
-			makeBarLine(formatBLDataSetEmiss(dataTemp, dataPower, "Philippines", capacities[0], capacities[1]));
+			makeBarLine(formatBLDataSetEmiss(dataTemp, dataPower, selectedCountry, capacities[0], capacities[1]));
 			makeDonut(years,capacities,selectedCountry,selectedAreas,selectedFuels);
 		}
 	});
